@@ -2,6 +2,7 @@ import axios from 'axios';
 import { useRouter } from 'next/router';
 import React, { useState } from 'react';
 import { toast } from 'react-toastify';
+import imageCompression from 'browser-image-compression';
 import Layout from '../../../components/Layout';
 import categories from '../../../utils/categories';
 
@@ -19,16 +20,33 @@ export default function ProductCreateScreen() {
         {
             name: '',
             images: [],
-            sizes: [{ name: '', countInStock: 0 }],
+            sizes: [{ name: 'Unique', countInStock: 0 }],
         },
     ]);
+    const [useMultipleSizes, setUseMultipleSizes] = useState(false);
 
     /* ---------- UPLOAD IMAGE ---------- */
     const uploadImageHandler = async (file, colorIndex) => {
-        const formData = new FormData();
-        formData.append('image', file);
-
         try {
+            // Options de compression
+            const options = {
+                maxSizeMB: 1, // Taille max 1MB
+                maxWidthOrHeight: 1920, // Dimension max
+                useWebWorker: true,
+                fileType: 'image/jpeg', // Convertir en JPEG pour meilleure compression
+            };
+
+            // Afficher un toast pendant la compression
+            toast.info('Compression de l\'image en cours...');
+
+            // Compresser l'image
+            const compressedFile = await imageCompression(file, options);
+
+            // Créer le FormData avec l'image compressée
+            const formData = new FormData();
+            formData.append('image', compressedFile);
+
+            // Upload
             const { data } = await axios.post('/api/admin/upload', formData, {
                 headers: { 'Content-Type': 'multipart/form-data' },
             });
@@ -36,8 +54,11 @@ export default function ProductCreateScreen() {
             const updated = [...colors];
             updated[colorIndex].images.push(data);
             setColors(updated);
+
+            toast.success('Image ajoutée avec succès');
         } catch (err) {
-            toast.error('Erreur lors de l’upload de l’image');
+            toast.error('Erreur lors de l\'upload de l\'image');
+            console.error(err);
         }
     };
 
@@ -166,99 +187,165 @@ export default function ProductCreateScreen() {
                                 {/* IMAGES */}
                                 <input
                                     type="file"
-                                    onChange={(e) =>
-                                        uploadImageHandler(e.target.files[0], colorIndex)
-                                    }
+                                    accept="image/*"
+                                    onChange={(e) => {
+                                        if (e.target.files[0]) {
+                                            uploadImageHandler(e.target.files[0], colorIndex);
+                                        }
+                                    }}
                                     className="mb-3 w-full text-sm text-gray-600 file:mr-4 file:py-2 file:px-4 file:rounded-lg file:border-0 file:text-sm file:font-medium file:bg-stone-100 file:text-stone-700 hover:file:bg-stone-200 truncate"
                                 />
 
-                                <div className="flex gap-2 mb-4">
+                                <div className="flex gap-2 mb-4 flex-wrap">
                                     {color.images.map((img, i) => (
-                                        <img
-                                            key={i}
-                                            src={img}
-                                            alt="preview"
-                                            className="h-16 w-16 rounded object-cover"
-                                        />
-                                    ))}
-                                </div>
-
-                                {/* TAILLES */}
-                                <div className="space-y-3">
-                                    {color.sizes.map((size, sizeIndex) => (
-                                        <div
-                                            key={sizeIndex}
-                                            className="flex flex-col sm:flex-row gap-2 sm:gap-3"
-                                        >
-                                            <div className="flex-1">
-                                                <label className="block text-xs text-gray-500 mb-1">
-                                                    Taille / Pointure
-                                                </label>
-                                                <input
-                                                    className="input w-full"
-                                                    placeholder="ex : S, M, 38, 40"
-                                                    value={size.name}
-                                                    onChange={(e) => {
-                                                        const updated = [...colors];
-                                                        updated[colorIndex].sizes[sizeIndex].name =
-                                                            e.target.value;
-                                                        setColors(updated);
-                                                    }}
-                                                />
-                                            </div>
-                                            <div className="flex gap-2 items-end">
-                                                <div className="flex-1 sm:w-32">
-                                                    <label className="block text-xs text-gray-500 mb-1">
-                                                        Quantité en stock
-                                                    </label>
-                                                    <input
-                                                        className="input w-full"
-                                                        type="number"
-                                                        min="0"
-                                                        placeholder="0"
-                                                        value={size.countInStock === 0 ? '' : size.countInStock}
-                                                        onChange={(e) => {
-                                                            const updated = [...colors];
-                                                            updated[colorIndex].sizes[sizeIndex].countInStock =
-                                                                e.target.value === '' ? 0 : Number(e.target.value);
-                                                            setColors(updated);
-                                                        }}
-                                                    />
-                                                </div>
-                                                {color.sizes.length > 1 && (
-                                                    <button
-                                                        type="button"
-                                                        className="px-3 py-2 text-sm text-red-500"
-                                                        onClick={() => {
-                                                            const updated = [...colors];
-                                                            updated[colorIndex].sizes = updated[
-                                                                colorIndex
-                                                            ].sizes.filter((_, i) => i !== sizeIndex);
-                                                            setColors(updated);
-                                                        }}
-                                                    >
-                                                        ✕
-                                                    </button>
-                                                )}
-                                            </div>
+                                        <div key={i} className="relative group">
+                                            <img
+                                                src={img}
+                                                alt="preview"
+                                                className="h-20 w-20 rounded-lg object-cover border-2 border-gray-200"
+                                            />
+                                            <button
+                                                type="button"
+                                                onClick={() => {
+                                                    const updated = [...colors];
+                                                    updated[colorIndex].images = updated[colorIndex].images.filter((_, idx) => idx !== i);
+                                                    setColors(updated);
+                                                }}
+                                                className="absolute -top-2 -right-2 bg-red-500 text-white rounded-full w-6 h-6 flex items-center justify-center text-xs opacity-0 group-hover:opacity-100 transition-opacity"
+                                            >
+                                                ✕
+                                            </button>
                                         </div>
                                     ))}
                                 </div>
 
-                                <button
-                                    type="button"
-                                    className="mt-3 text-xs md:text-sm text-stone-600 underline"
-                                    onClick={() => {
-                                        const updated = [...colors];
-                                        updated[colorIndex].sizes.push({
-                                            name: '',
-                                            countInStock: 0,
-                                        });
-                                        setColors(updated);
-                                    }}
-                                >
-                                    + Ajouter une taille
-                                </button>
+                                {/* TAILLES - MODE SIMPLIFIÉ */}
+                                {!useMultipleSizes ? (
+                                    <div className="bg-[#FAF7F2] rounded-lg p-4">
+                                        <div className="flex items-center justify-between mb-3">
+                                            <label className="text-sm font-medium text-[#2D2416]">
+                                                Quantité en stock (Taille unique)
+                                            </label>
+                                            <button
+                                                type="button"
+                                                onClick={() => setUseMultipleSizes(true)}
+                                                className="text-xs text-[#6B5635] underline hover:text-[#3D3021]"
+                                            >
+                                                + Ajouter plusieurs tailles
+                                            </button>
+                                        </div>
+                                        <input
+                                            className="input w-full"
+                                            type="number"
+                                            min="0"
+                                            placeholder="Quantité disponible"
+                                            value={color.sizes[0]?.countInStock === 0 ? '' : color.sizes[0]?.countInStock}
+                                            onChange={(e) => {
+                                                const updated = [...colors];
+                                                if (!updated[colorIndex].sizes[0]) {
+                                                    updated[colorIndex].sizes[0] = { name: 'Unique', countInStock: 0 };
+                                                }
+                                                updated[colorIndex].sizes[0].countInStock =
+                                                    e.target.value === '' ? 0 : Number(e.target.value);
+                                                updated[colorIndex].sizes[0].name = 'Unique';
+                                                setColors(updated);
+                                            }}
+                                        />
+                                    </div>
+                                ) : (
+                                    /* TAILLES - MODE AVANCÉ */
+                                    <div className="space-y-3">
+                                        <div className="flex items-center justify-between mb-2">
+                                            <label className="text-sm font-medium text-[#2D2416]">
+                                                Tailles et stock
+                                            </label>
+                                            <button
+                                                type="button"
+                                                onClick={() => {
+                                                    const updated = [...colors];
+                                                    updated[colorIndex].sizes = [{ name: 'Unique', countInStock: 0 }];
+                                                    setColors(updated);
+                                                    setUseMultipleSizes(false);
+                                                }}
+                                                className="text-xs text-red-500 underline"
+                                            >
+                                                Revenir à taille unique
+                                            </button>
+                                        </div>
+                                        {color.sizes.map((size, sizeIndex) => (
+                                            <div
+                                                key={sizeIndex}
+                                                className="flex flex-col sm:flex-row gap-2 sm:gap-3 bg-[#FAF7F2] p-3 rounded-lg"
+                                            >
+                                                <div className="flex-1">
+                                                    <label className="block text-xs text-gray-500 mb-1">
+                                                        Taille / Pointure
+                                                    </label>
+                                                    <input
+                                                        className="input w-full"
+                                                        placeholder="ex : S, M, 38, 40"
+                                                        value={size.name}
+                                                        onChange={(e) => {
+                                                            const updated = [...colors];
+                                                            updated[colorIndex].sizes[sizeIndex].name =
+                                                                e.target.value;
+                                                            setColors(updated);
+                                                        }}
+                                                    />
+                                                </div>
+                                                <div className="flex gap-2 items-end">
+                                                    <div className="flex-1 sm:w-32">
+                                                        <label className="block text-xs text-gray-500 mb-1">
+                                                            Quantité en stock
+                                                        </label>
+                                                        <input
+                                                            className="input w-full"
+                                                            type="number"
+                                                            min="0"
+                                                            placeholder="0"
+                                                            value={size.countInStock === 0 ? '' : size.countInStock}
+                                                            onChange={(e) => {
+                                                                const updated = [...colors];
+                                                                updated[colorIndex].sizes[sizeIndex].countInStock =
+                                                                    e.target.value === '' ? 0 : Number(e.target.value);
+                                                                setColors(updated);
+                                                            }}
+                                                        />
+                                                    </div>
+                                                    {color.sizes.length > 1 && (
+                                                        <button
+                                                            type="button"
+                                                            className="px-3 py-2 text-sm text-red-500 hover:bg-red-50 rounded"
+                                                            onClick={() => {
+                                                                const updated = [...colors];
+                                                                updated[colorIndex].sizes = updated[
+                                                                    colorIndex
+                                                                ].sizes.filter((_, i) => i !== sizeIndex);
+                                                                setColors(updated);
+                                                            }}
+                                                        >
+                                                            ✕
+                                                        </button>
+                                                    )}
+                                                </div>
+                                            </div>
+                                        ))}
+                                        <button
+                                            type="button"
+                                            className="text-sm text-[#6B5635] underline hover:text-[#3D3021]"
+                                            onClick={() => {
+                                                const updated = [...colors];
+                                                updated[colorIndex].sizes.push({
+                                                    name: '',
+                                                    countInStock: 0,
+                                                });
+                                                setColors(updated);
+                                            }}
+                                        >
+                                            + Ajouter une taille
+                                        </button>
+                                    </div>
+                                )}
 
                                 {colors.length > 1 && (
                                     <button
@@ -282,7 +369,7 @@ export default function ProductCreateScreen() {
                                     {
                                         name: '',
                                         images: [],
-                                        sizes: [{ name: '', countInStock: 0 }],
+                                        sizes: [{ name: 'Unique', countInStock: 0 }],
                                     },
                                 ])
                             }

@@ -283,7 +283,7 @@ export default function Layout({ title, children }) {
                   Contact
                 </h3>
                 <p className="text-sm text-[#3D3021] font-normal">
-                  Téléphone : <span className="font-medium text-[#2D2416]">+216 25 065 628</span>
+                  Téléphone : <span className="font-medium text-[#2D2416]">+216 98 625 049</span>
                 </p>
                 <p className="mt-2 text-sm text-[#3D3021] font-normal">
                   Nabeul, Tunisie
@@ -297,7 +297,7 @@ export default function Layout({ title, children }) {
                 </h3>
 
                 <a
-                  href="https://www.instagram.com/mayastyle.officie"
+                  href="https://www.instagram.com/aysha_accessoires/?igsh=dWJvMnh3MG1wbnMw"
                   target="_blank"
                   rel="noreferrer"
                   className="inline-flex items-center gap-3 text-sm text-[#5A4D3A] hover:text-[#3D3021] transition-colors duration-300 font-normal"

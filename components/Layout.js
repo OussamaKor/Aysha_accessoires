@@ -25,14 +25,16 @@ export default function Layout({ title, children }) {
     setCartItemsCount(cart.cartItems.reduce((a, c) => a + c.quantity, 0));
   }, [cart.cartItems]);
 
+  const router = useRouter();
+  const isAdminRoute = router.pathname.startsWith('/admin');
+
   const logoutClickHandler = () => {
     Cookies.remove('cart');
     dispatch({ type: 'CART_RESET' });
-    signOut({ callbackUrl: '/login' });
+    // Rediriger vers /admin/login si on est sur une page admin, sinon vers /login
+    const redirectUrl = isAdminRoute ? '/admin/login' : '/login';
+    signOut({ callbackUrl: redirectUrl });
   };
-
-  const router = useRouter();
-  const isAdminRoute = router.pathname.startsWith('/admin');
 
   return (
     <>

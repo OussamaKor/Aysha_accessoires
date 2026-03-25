@@ -11,12 +11,12 @@ export default NextAuth({
   callbacks: {
     async jwt({ token, user }) {
       if (user?._id) token._id = user._id;
-      if (user?.hasOwnProperty('isAdmin')) token.isAdmin = user.isAdmin;
+      if (user && 'isAdmin' in user) token.isAdmin = user.isAdmin;
       return token;
     },
     async session({ session, token }) {
       if (token?._id) session.user._id = token._id;
-      if (token?.hasOwnProperty('isAdmin')) session.user.isAdmin = token.isAdmin;
+      if ('isAdmin' in token) session.user.isAdmin = token.isAdmin;
       return session;
     },
   },

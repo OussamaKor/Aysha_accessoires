@@ -103,7 +103,7 @@ function CartScreen() {
                       </p>
 
                       <p className="mt-4 text-lg font-medium text-[#2D2416]">
-                        {item.price} <span className="text-base">€</span>
+                        {item.price} <span className="text-base">DT</span>
                       </p>
                     </div>
 
@@ -157,7 +157,7 @@ function CartScreen() {
                   {cartItems.reduce(
                     (a, c) => a + c.quantity * c.price,
                     0
-                  )} <span className="text-base">€</span>
+                  )} <span className="text-base">DT</span>
                 </span>
               </div>
 

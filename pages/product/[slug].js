@@ -249,7 +249,7 @@ export default function ProductScreen({ product }) {
               {/* PRICE & STOCK */}
               <div className="flex flex-col sm:flex-row sm:items-center gap-3 sm:gap-6 pt-4 border-t border-[#C9B99A]/40">
                 <span className="text-3xl sm:text-4xl font-medium text-[#2D2416] tracking-wide">
-                  {product.price} <span className="text-2xl">€</span>
+                  {product.price} <span className="text-2xl">DT</span>
                 </span>
 
                 {selectedSize ? (

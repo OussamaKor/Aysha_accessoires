@@ -169,7 +169,7 @@ export default function PlaceOrderScreen() {
                               Quantité : <span className="text-[#2D2416] font-medium">{item.quantity}</span>
                             </p>
                             <p className="text-base font-medium text-[#2D2416]">
-                              {item.quantity * item.price} <span className="text-sm">€</span>
+                              {item.quantity * item.price} <span className="text-sm">DT</span>
                             </p>
                           </div>
                         </div>
@@ -191,21 +191,21 @@ export default function PlaceOrderScreen() {
                   <div className="space-y-3 text-sm mb-6">
                     <div className="flex justify-between text-[#5A4D3A] font-normal">
                       <span>Sous-total</span>
-                      <span className="text-[#2D2416] font-medium">{itemsPrice} €</span>
+                      <span className="text-[#2D2416] font-medium">{itemsPrice} DT</span>
                     </div>
                     <div className="flex justify-between text-[#5A4D3A] font-normal">
                       <span>Livraison</span>
-                      <span className="text-[#2D2416] font-medium">{shippingPrice} €</span>
+                      <span className="text-[#2D2416] font-medium">{shippingPrice} DT</span>
                     </div>
                     <div className="flex justify-between text-[#5A4D3A] font-normal">
                       <span>Taxes</span>
-                      <span className="text-[#2D2416] font-medium">{taxPrice} €</span>
+                      <span className="text-[#2D2416] font-medium">{taxPrice} DT</span>
                     </div>
                   </div>
 
                   <div className="flex justify-between text-xl font-medium pt-6 border-t border-[#C9B99A]/40 text-[#2D2416] mb-8">
                     <span>Total</span>
-                    <span>{totalPrice} <span className="text-base">€</span></span>
+                    <span>{totalPrice} <span className="text-base">DT</span></span>
                   </div>
 
                   <button

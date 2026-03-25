@@ -53,7 +53,7 @@ export default function ProductItem({ product, addToCartHandler }) {
         <div className="w-8 h-[2px] mx-auto mb-2 bg-gradient-to-r from-transparent via-[#9D8B6F] to-transparent"></div>
         
         <p className="text-base sm:text-lg font-medium text-[#3D3021] tracking-wide">
-          {product.price} <span className="text-sm">€</span>
+          {product.price} <span className="text-sm">DT</span>
         </p>
       </div>
     </div>

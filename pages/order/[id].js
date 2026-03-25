@@ -266,7 +266,7 @@ function OrderScreen() {
                               Quantité : <span className="text-[#2D2416] font-medium">{item.quantity}</span>
                             </p>
                             <p className="text-base font-medium text-[#2D2416]">
-                              {item.quantity * item.price} <span className="text-sm">€</span>
+                              {item.quantity * item.price} <span className="text-sm">DT</span>
                             </p>
                           </div>
                         </div>
@@ -287,7 +287,7 @@ function OrderScreen() {
 
                   <div className="flex justify-between text-xl font-medium mb-6 text-[#2D2416]">
                     <span>Total</span>
-                    <span>{itemsPrice} <span className="text-base">€</span></span>
+                    <span>{itemsPrice} <span className="text-base">DT</span></span>
                   </div>
 
                   {session?.user?.isAdmin &&

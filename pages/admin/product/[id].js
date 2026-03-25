@@ -189,7 +189,7 @@ export default function ProductEditScreen() {
             <input
               className="input"
               type="number"
-              placeholder="Prix"
+              placeholder="Prix (DT)"
               value={price}
               onChange={(e) => setPrice(e.target.value)}
             />

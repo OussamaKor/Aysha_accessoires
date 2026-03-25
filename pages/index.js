@@ -155,12 +155,12 @@ export default function Home({ products }) {
                 <div className="inline-block mb-6">
                   <div className="w-20 h-[2px] mx-auto bg-gradient-to-r from-transparent via-[#9D8B6F] to-transparent mb-5"></div>
                   <h2 className="text-3xl sm:text-4xl md:text-5xl font-serif italic text-[#3D3021] mb-5 font-medium">
-                    L'Art de la Parure
+                    L&apos;Art de la Parure
                   </h2>
                   <div className="w-20 h-[2px] mx-auto bg-gradient-to-r from-transparent via-[#9D8B6F] to-transparent"></div>
                 </div>
                 <p className="text-base sm:text-lg text-[#2D2416] leading-relaxed tracking-wide font-normal">
-                  Chaque bijou est une promesse d'élégance intemporelle.<br className="hidden sm:block" />
+                  Chaque bijou est une promesse d&apos;élégance intemporelle.<br className="hidden sm:block" />
                   Des pièces soigneusement sélectionnées pour magnifier votre style unique.
                 </p>
               </div>

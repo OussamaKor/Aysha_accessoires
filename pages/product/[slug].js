@@ -287,7 +287,9 @@ export default function ProductScreen({ product }) {
                       ✓ En stock
                     </span>
                   ) : (
-                    <span className="text-sm text-[#9D8B6F] font-normal">✕ Rupture de stock</span>
+                    <span className="text-sm text-red-600 font-bold animate-pulse">
+                      ✕ Rupture de stock
+                    </span>
                   )
                 ) : !hasUniqueSizeOnly ? (
                   <span className="text-sm text-[#9D8B6F] font-normal italic">
@@ -303,7 +305,7 @@ export default function ProductScreen({ product }) {
                 className={`relative rounded-xl py-4 px-6 text-sm uppercase tracking-[0.25em] font-normal transition-all duration-500 overflow-hidden
                   ${
                     !selectedSize || selectedSize.countInStock === 0
-                      ? 'bg-transparent border-2 border-[#C9B99A]/50 text-[#9D8B6F]/60 cursor-not-allowed'
+                      ? 'bg-gray-100 border-2 border-gray-300 text-gray-400 cursor-not-allowed'
                       : 'bg-white border-2 border-[#9D8B6F]/60 text-[#2D2416] hover:bg-[#F5EFE7] hover:border-[#6B5635] hover:shadow-xl hover:shadow-[#9D8B6F]/20 group'
                   }
                 `}

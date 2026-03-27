@@ -22,8 +22,17 @@ export default function Layout({ title, children, availableCategories = [] }) {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
 
   // Filtrer les catégories qui ont au moins un produit
-  const bijouxCategories = ['boucles-oreilles', 'colliers', 'bracelets', 'bagues', 'chokers', 'gourmettes', 'parures', 'bracelets-cheville'].filter(key => availableCategories.includes(key));
-  const accessoiresCategories = ['sacs', 'foulards', 'portefeuilles', 'lunettes'].filter(key => availableCategories.includes(key));
+  // Si availableCategories est vide, afficher toutes les catégories
+  const allBijouxCategories = ['boucles-oreilles', 'colliers', 'bracelets', 'bagues', 'chokers', 'gourmettes', 'parures', 'bracelets-cheville'];
+  const allAccessoiresCategories = ['sacs', 'foulards', 'portefeuilles', 'lunettes'];
+  
+  const bijouxCategories = availableCategories.length > 0 
+    ? allBijouxCategories.filter(key => availableCategories.includes(key))
+    : allBijouxCategories;
+    
+  const accessoiresCategories = availableCategories.length > 0
+    ? allAccessoiresCategories.filter(key => availableCategories.includes(key))
+    : allAccessoiresCategories;
   
   useEffect(() => {
     setCartItemsCount(cart.cartItems.reduce((a, c) => a + c.quantity, 0));
@@ -297,7 +306,7 @@ export default function Layout({ title, children, availableCategories = [] }) {
                   Contact
                 </h3>
                 <p className="text-sm text-[#3D3021] font-normal">
-                  Téléphone : <span className="font-medium text-[#2D2416]">+216 98 625 049</span>
+                  Téléphone : <span className="font-medium text-[#2D2416]">98 625 049</span>
                 </p>
                 <p className="mt-2 text-sm text-[#3D3021] font-normal">
                   Nabeul, Tunisie

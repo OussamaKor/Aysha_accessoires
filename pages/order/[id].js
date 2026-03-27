@@ -311,16 +311,12 @@ function OrderScreen() {
                     </div>
                     <div className="flex justify-between text-[#5A4D3A] font-normal">
                       <span>Livraison</span>
-                      <span className="text-[#2D2416] font-medium">{shippingPrice?.toFixed(2)} DT</span>
-                    </div>
-                    <div className="flex justify-between text-[#5A4D3A] font-normal">
-                      <span>Taxes (15%)</span>
-                      <span className="text-[#2D2416] font-medium">{taxPrice?.toFixed(2)} DT</span>
+                      <span className="text-[#2D2416] font-medium">7 DT</span>
                     </div>
                   </div>
                   <div className="flex justify-between text-xl font-medium mb-6 text-[#2D2416]">
                     <span>Total</span>
-                    <span>{totalPrice?.toFixed(2)} <span className="text-base">DT</span></span>
+                    <span>{(itemsPrice + 7).toFixed(2)} <span className="text-base">DT</span></span>
                   </div>
 
                   {session?.user?.isAdmin &&

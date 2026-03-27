@@ -43,7 +43,7 @@ export default function ProductItem({ product, addToCartHandler }) {
           <div className="bg-gradient-to-r from-gray-800 to-gray-700 text-white 
                         px-3 py-1.5 rounded-full text-xs font-bold 
                         shadow-lg uppercase">
-            Épuisé
+            Sold Out
           </div>
         </div>
       )}

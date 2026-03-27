@@ -1,4 +1,5 @@
 import axios from 'axios';
+import Image from 'next/image';
 import { useRouter } from 'next/router';
 import React, { useState } from 'react';
 import { toast } from 'react-toastify';
@@ -213,10 +214,12 @@ export default function ProductCreateScreen() {
                                 <div className="flex gap-2 mb-4 flex-wrap">
                                     {color.images.map((img, i) => (
                                         <div key={i} className="relative group">
-                                            <img
+                                            <Image
                                                 src={img}
                                                 alt="preview"
-                                                className="h-20 w-20 rounded-lg object-cover border-2 border-gray-200"
+                                                width={80}
+                                                height={80}
+                                                className="rounded-lg object-cover border-2 border-gray-200"
                                             />
                                             <button
                                                 type="button"

@@ -1,4 +1,5 @@
 import axios from 'axios';
+import Image from 'next/image';
 import { useContext, useMemo } from 'react';
 import { toast } from 'react-toastify';
 import Layout from '../components/Layout';
@@ -82,10 +83,12 @@ export default function Home({ products }) {
         <div className="relative w-full h-[53vh] sm:h-[50vh] md:h-[55vh] overflow-hidden">
 
           {/* IMAGE PRINCIPALE */}
-          <img
+          <Image
             src="/images/profile_aysha.png"
             alt="Aysha Bijoux"
-            className="w-full h-full object-cover object-center"
+            fill
+            priority
+            className="object-cover object-center"
           />
 
           {/* Overlay gradient en bas uniquement */}

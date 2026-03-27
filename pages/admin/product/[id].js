@@ -1,4 +1,5 @@
 import axios from 'axios';
+import Image from 'next/image';
 import { useRouter } from 'next/router';
 import React, { useEffect, useState } from 'react';
 import { toast } from 'react-toastify';
@@ -64,7 +65,7 @@ export default function ProductEditScreen() {
         },
       ]);
     }
-  }, [id]);
+  }, [id, isNew]);
 
   /* ---------------- UPLOAD IMAGE ---------------- */
   const uploadImageHandler = async (file, colorIndex) => {
@@ -226,10 +227,12 @@ export default function ProductEditScreen() {
               Image principale
             </p>
             {image && (
-              <img
+              <Image
                 src={image}
                 alt="Main"
-                className="h-24 mb-3 rounded"
+                width={96}
+                height={96}
+                className="mb-3 rounded object-cover"
               />
             )}
           </div>
@@ -270,9 +273,12 @@ export default function ProductEditScreen() {
                 <div className="flex gap-2 mt-2">
                   {color.images.map((img, i) => (
                     <div key={i}>
-                      <img
+                      <Image
                         src={img}
-                        className="h-16 w-16 rounded object-cover"
+                        alt={`Preview ${i + 1}`}
+                        width={64}
+                        height={64}
+                        className="rounded object-cover"
                       />
                       <button
                         type="button"

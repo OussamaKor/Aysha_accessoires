@@ -31,10 +31,11 @@ const putHandler = async (req, res) => {
     product.name = req.body.name;
     product.slug = req.body.slug;
     product.price = req.body.price;
+    product.discount = req.body.discount || 0;
     product.category = req.body.category;
     product.image = req.body.image;
     product.brand = req.body.brand;
-    product.countInStock = req.body.countInStock;
+    product.colors = req.body.colors || [];
     product.description = req.body.description;
     await product.save();
     await db.disconnect();

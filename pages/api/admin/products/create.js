@@ -20,6 +20,7 @@ const handler = async (req, res) => {
     category: req.body.category,
     brand: req.body.brand,
     price: req.body.price,
+    discount: req.body.discount || 0,
     countInStock: req.body.countInStock,
     description: req.body.description,
     colors: req.body.colors,

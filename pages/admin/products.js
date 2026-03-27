@@ -127,60 +127,162 @@ export default function AdminProductsScreen() {
               ) : error ? (
                 <div className="bg-red-100 p-4 text-red-700">{error}</div>
               ) : (
-                <div className="rounded-xl bg-white shadow overflow-x-auto">
-                  <table className="min-w-full text-sm">
-                    <thead className="bg-gray-100 text-xs uppercase">
-                      <tr>
-                        <th className="px-4 py-3 text-left">Image</th>
-                        <th className="px-4 py-3 text-left">Nom</th>
-                        <th className="px-4 py-3 text-left">Prix</th>
-                        <th className="px-4 py-3 text-left">Catégorie</th>
-                        <th className="px-4 py-3 text-left">Stock total</th>
-                        <th className="px-4 py-3 text-left">Actions</th>
-                      </tr>
-                    </thead>
-                    <tbody>
-                      {products.map((product) => (
-                        <tr key={product._id} className="border-b">
-                          <td className="px-4 py-3">
+                <>
+                  {/* TABLEAU DESKTOP */}
+                  <div className="hidden md:block rounded-xl bg-white shadow overflow-x-auto">
+                    <table className="min-w-full text-sm">
+                      <thead className="bg-gray-100 text-xs uppercase">
+                        <tr>
+                          <th className="px-4 py-3 text-left">Image</th>
+                          <th className="px-4 py-3 text-left">Nom</th>
+                          <th className="px-4 py-3 text-left">Prix</th>
+                          <th className="px-4 py-3 text-left">Remise</th>
+                          <th className="px-4 py-3 text-left">Catégorie</th>
+                          <th className="px-4 py-3 text-left">Stock total</th>
+                          <th className="px-4 py-3 text-left">Actions</th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        {products.map((product) => (
+                          <tr key={product._id} className="border-b">
+                            <td className="px-4 py-3">
+                              <Image
+                                src={
+                                  product.colors?.[0]?.images?.[0] ||
+                                  product.image
+                                }
+                                alt={product.name}
+                                width={40}
+                                height={40}
+                                className="rounded object-cover"
+                              />
+                            </td>
+                            <td className="px-4 py-3">{product.name}</td>
+                            <td className="px-4 py-3 font-medium">
+                              {product.discount > 0 ? (
+                                <div className="flex flex-col gap-1">
+                                  <span className="text-gray-400 line-through text-xs">
+                                    {product.price} DT
+                                  </span>
+                                  <span className="text-red-600 font-bold">
+                                    {(product.price * (1 - product.discount / 100)).toFixed(2)} DT
+                                  </span>
+                                </div>
+                              ) : (
+                                <span>{product.price} DT</span>
+                              )}
+                            </td>
+                            <td className="px-4 py-3">
+                              {product.discount > 0 ? (
+                                <span className="inline-block bg-red-500 text-white text-xs px-2 py-1 rounded-full font-bold">
+                                  -{product.discount}%
+                                </span>
+                              ) : (
+                                <span className="text-gray-400 text-xs">Aucune</span>
+                              )}
+                            </td>
+                            <td className="px-4 py-3">{product.category}</td>
+                            <td className="px-4 py-3">
+                              {getTotalStock(product)}
+                            </td>
+                            <td className="px-4 py-3 space-x-2">
+                              <Link
+                                href={`/admin/product/${product._id}`}
+                                className="rounded bg-gray-100 px-3 py-1 text-xs"
+                              >
+                                Modifier
+                              </Link>
+                              <button
+                                onClick={() => deleteHandler(product._id)}
+                                className="rounded bg-red-100 px-3 py-1 text-xs text-red-700"
+                              >
+                                Supprimer
+                              </button>
+                            </td>
+                          </tr>
+                        ))}
+                      </tbody>
+                    </table>
+                  </div>
+
+                  {/* CARTES MOBILE */}
+                  <div className="md:hidden space-y-4">
+                    {products.map((product) => (
+                      <div
+                        key={product._id}
+                        className="rounded-xl bg-white shadow p-4 border border-gray-200"
+                      >
+                        <div className="flex gap-4">
+                          {/* Image */}
+                          <div className="flex-shrink-0">
                             <Image
                               src={
                                 product.colors?.[0]?.images?.[0] ||
                                 product.image
                               }
                               alt={product.name}
-                              width={40}
-                              height={40}
+                              width={80}
+                              height={80}
                               className="rounded object-cover"
                             />
-                          </td>
-                          <td className="px-4 py-3">{product.name}</td>
-                          <td className="px-4 py-3 font-medium">
-                            {product.price} DT
-                          </td>
-                          <td className="px-4 py-3">{product.category}</td>
-                          <td className="px-4 py-3">
-                            {getTotalStock(product)}
-                          </td>
-                          <td className="px-4 py-3 space-x-2">
-                            <Link
-                              href={`/admin/product/${product._id}`}
-                              className="rounded bg-gray-100 px-3 py-1 text-xs"
-                            >
-                              Modifier
-                            </Link>
-                            <button
-                              onClick={() => deleteHandler(product._id)}
-                              className="rounded bg-red-100 px-3 py-1 text-xs text-red-700"
-                            >
-                              Supprimer
-                            </button>
-                          </td>
-                        </tr>
-                      ))}
-                    </tbody>
-                  </table>
-                </div>
+                          </div>
+
+                          {/* Infos */}
+                          <div className="flex-1 min-w-0">
+                            <h3 className="font-semibold text-sm mb-2 truncate">
+                              {product.name}
+                            </h3>
+
+                            {/* Prix et Remise */}
+                            <div className="mb-2">
+                              {product.discount > 0 ? (
+                                <div className="flex items-center gap-2">
+                                  <span className="bg-red-500 text-white text-xs px-2 py-0.5 rounded-full font-bold">
+                                    -{product.discount}%
+                                  </span>
+                                  <div className="flex flex-col">
+                                    <span className="text-gray-400 line-through text-xs">
+                                      {product.price} DT
+                                    </span>
+                                    <span className="text-red-600 font-bold text-sm">
+                                      {(product.price * (1 - product.discount / 100)).toFixed(2)} DT
+                                    </span>
+                                  </div>
+                                </div>
+                              ) : (
+                                <span className="font-medium text-sm">
+                                  {product.price} DT
+                                </span>
+                              )}
+                            </div>
+
+                            {/* Catégorie et Stock */}
+                            <div className="flex gap-3 text-xs text-gray-600 mb-3">
+                              <span>🏷️ {product.category}</span>
+                              <span>📦 Stock: {getTotalStock(product)}</span>
+                            </div>
+
+                            {/* Actions */}
+                            <div className="flex gap-2">
+                              <Link
+                                href={`/admin/product/${product._id}`}
+                                className="flex-1 text-center rounded-lg bg-gray-100 px-3 py-2 text-xs font-medium"
+                              >
+                                Modifier
+                              </Link>
+                              <button
+                                onClick={() => deleteHandler(product._id)}
+                                className="flex-1 text-center rounded-lg bg-red-100 px-3 py-2 text-xs font-medium text-red-700"
+                              >
+                                Supprimer
+                              </button>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                </>
               )}
             </div>
           </div>

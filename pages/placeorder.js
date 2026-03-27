@@ -9,6 +9,7 @@ import CheckoutWizard from '../components/CheckoutWizard';
 import Layout from '../components/Layout';
 import { getError } from '../utils/error';
 import { Store } from '../utils/Store';
+import { calculateFinalPrice, hasDiscount } from '../utils/pricing';
 
 export default function PlaceOrderScreen() {
   const { state, dispatch } = useContext(Store);
@@ -22,7 +23,7 @@ export default function PlaceOrderScreen() {
     Math.round(num * 100 + Number.EPSILON) / 100;
 
   const itemsPrice = round2(
-    cartItems.reduce((a, c) => a + c.quantity * c.price, 0)
+    cartItems.reduce((a, c) => a + c.quantity * calculateFinalPrice(c.price, c.discount), 0)
   );
 
   const shippingPrice = itemsPrice > 200 ? 0 : 15;
@@ -168,9 +169,25 @@ export default function PlaceOrderScreen() {
                             <p className="text-sm text-[#5A4D3A] font-normal">
                               Quantité : <span className="text-[#2D2416] font-medium">{item.quantity}</span>
                             </p>
-                            <p className="text-base font-medium text-[#2D2416]">
-                              {item.quantity * item.price} <span className="text-sm">DT</span>
-                            </p>
+                            <div className="text-right">
+                              {hasDiscount(item.discount) ? (
+                                <div className="flex flex-col gap-1">
+                                  <span className="bg-red-500 text-white text-xs px-2 py-0.5 rounded-full font-bold inline-block">
+                                    -{item.discount}%
+                                  </span>
+                                  <p className="text-xs text-[#6B5635] line-through">
+                                    {item.quantity * item.price} <span className="text-xs">DT</span>
+                                  </p>
+                                  <p className="text-base font-bold text-red-600">
+                                    {(item.quantity * calculateFinalPrice(item.price, item.discount)).toFixed(2)} <span className="text-sm">DT</span>
+                                  </p>
+                                </div>
+                              ) : (
+                                <p className="text-base font-medium text-[#2D2416]">
+                                  {item.quantity * item.price} <span className="text-sm">DT</span>
+                                </p>
+                              )}
+                            </div>
                           </div>
                         </div>
                       </div>
@@ -191,17 +208,21 @@ export default function PlaceOrderScreen() {
                   <div className="space-y-3 text-sm mb-6">
                     <div className="flex justify-between text-[#5A4D3A] font-normal">
                       <span>Sous-total</span>
-                      <span className="text-[#2D2416] font-medium">{itemsPrice} DT</span>
+                      <span className="text-[#2D2416] font-medium">{itemsPrice.toFixed(2)} DT</span>
                     </div>
                     <div className="flex justify-between text-[#5A4D3A] font-normal">
                       <span>Livraison</span>
-                      <span className="text-[#2D2416] font-medium">7 DT</span>
+                      <span className="text-[#2D2416] font-medium">{shippingPrice.toFixed(2)} DT</span>
+                    </div>
+                    <div className="flex justify-between text-[#5A4D3A] font-normal">
+                      <span>Taxes (15%)</span>
+                      <span className="text-[#2D2416] font-medium">{taxPrice.toFixed(2)} DT</span>
                     </div>
                   </div>
 
                   <div className="flex justify-between text-xl font-medium pt-6 border-t border-[#C9B99A]/40 text-[#2D2416] mb-8">
                     <span>Total</span>
-                    <span>{itemsPrice + 7} <span className="text-base">DT</span></span>
+                    <span>{totalPrice.toFixed(2)} <span className="text-base">DT</span></span>
                   </div>
 
                   <button

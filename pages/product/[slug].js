@@ -18,6 +18,13 @@ export default function ProductScreen({ product }) {
   const { state, dispatch } = useContext(Store);
   const router = useRouter();
 
+  /* ---------- DISCOUNT ---------- */
+  const discount = Number(product.discount) || 0;
+  const hasDiscount = discount > 0;
+  const discountedPrice = hasDiscount 
+    ? (product.price * (1 - discount / 100)).toFixed(2)
+    : product.price;
+
   /* ---------- VARIANTS ---------- */
   const colors = product?.colors || [];
   const [selectedColorIndex, setSelectedColorIndex] = useState(0);
@@ -248,9 +255,31 @@ export default function ProductScreen({ product }) {
 
               {/* PRICE & STOCK */}
               <div className="flex flex-col sm:flex-row sm:items-center gap-3 sm:gap-6 pt-4 border-t border-[#C9B99A]/40">
-                <span className="text-3xl sm:text-4xl font-medium text-[#2D2416] tracking-wide">
-                  {product.price} <span className="text-2xl">DT</span>
-                </span>
+                <div className="flex flex-col gap-2">
+                  {hasDiscount ? (
+                    <>
+                      {/* Badge de réduction */}
+                      <div className="inline-flex items-center gap-2 mb-1">
+                        <div className="bg-gradient-to-r from-red-600 to-red-500 text-white 
+                                      px-3 py-1 rounded-full text-xs font-bold shadow-md">
+                          -{discount}% DE RÉDUCTION
+                        </div>
+                      </div>
+                      {/* Prix original barré */}
+                      <p className="text-base sm:text-lg text-[#6B5635] line-through">
+                        {product.price} <span className="text-sm">DT</span>
+                      </p>
+                      {/* Prix réduit */}
+                      <span className="text-3xl sm:text-4xl font-bold text-red-600 tracking-wide">
+                        {discountedPrice} <span className="text-2xl">DT</span>
+                      </span>
+                    </>
+                  ) : (
+                    <span className="text-3xl sm:text-4xl font-medium text-[#2D2416] tracking-wide">
+                      {product.price} <span className="text-2xl">DT</span>
+                    </span>
+                  )}
+                </div>
 
                 {selectedSize ? (
                   selectedSize.countInStock > 0 ? (

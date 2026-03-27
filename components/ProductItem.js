@@ -4,8 +4,27 @@ import React from 'react';
 import { EyeIcon, ShoppingCartIcon } from '@heroicons/react/24/outline';
 
 export default function ProductItem({ product, addToCartHandler }) {
+  // Calculer le prix réduit si discount existe
+  const discount = Number(product.discount) || 0;
+  const hasDiscount = discount > 0;
+  const discountedPrice = hasDiscount 
+    ? (product.price * (1 - discount / 100)).toFixed(2)
+    : product.price;
+
   return (
     <div className="group relative rounded-xl overflow-hidden bg-gradient-to-br from-white to-[#F5EFE7] shadow-md hover:shadow-2xl hover:shadow-[#9D8B6F]/30 transition-all duration-500">
+      
+      {/* Badge de réduction */}
+      {hasDiscount && (
+        <div className="absolute top-3 left-3 z-10">
+          <div className="bg-gradient-to-r from-red-600 to-red-500 text-white 
+                        px-3 py-1.5 rounded-full text-xs font-bold 
+                        shadow-lg transform -rotate-3 
+                        animate-pulse">
+            -{discount}%
+          </div>
+        </div>
+      )}
       
       {/* Accents dorés aux coins */}
       <div className="absolute top-0 left-0 w-8 h-8 border-t-2 border-l-2 border-[#9D8B6F]/50 rounded-tl-xl pointer-events-none"></div>
@@ -52,9 +71,25 @@ export default function ProductItem({ product, addToCartHandler }) {
         {/* Séparateur décoratif */}
         <div className="w-8 h-[2px] mx-auto mb-2 bg-gradient-to-r from-transparent via-[#9D8B6F] to-transparent"></div>
         
-        <p className="text-base sm:text-lg font-medium text-[#3D3021] tracking-wide">
-          {product.price} <span className="text-sm">DT</span>
-        </p>
+        {/* PRIX - hauteur fixe pour garder la même taille */}
+        <div className="flex flex-col items-center justify-center gap-1 min-h-[3.5rem]">
+          {hasDiscount ? (
+            <>
+              {/* Prix original barré */}
+              <p className="text-xs sm:text-sm text-[#6B5635] line-through opacity-70">
+                {product.price} <span className="text-xs">DT</span>
+              </p>
+              {/* Prix réduit */}
+              <p className="text-lg sm:text-xl font-bold text-red-600 tracking-wide">
+                {discountedPrice} <span className="text-sm">DT</span>
+              </p>
+            </>
+          ) : (
+            <p className="text-base sm:text-lg font-medium text-[#3D3021] tracking-wide">
+              {product.price} <span className="text-sm">DT</span>
+            </p>
+          )}
+        </div>
       </div>
     </div>
   );

@@ -24,6 +24,7 @@ const productSchema = new mongoose.Schema(
     ],
 
     price: { type: Number, required: true },
+    discount: { type: Number, default: 0, min: 0, max: 100 }, // Pourcentage de réduction (0-100)
     brand: { type: String, required: true },
     rating: { type: Number, default: 0 },
     numReviews: { type: Number, default: 0 },

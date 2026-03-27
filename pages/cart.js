@@ -7,6 +7,7 @@ import { useRouter } from 'next/router';
 import dynamic from 'next/dynamic';
 import { toast } from 'react-toastify';
 import { Trash2 } from 'lucide-react';
+import { calculateFinalPrice, hasDiscount } from '../utils/pricing';
 
 function CartScreen() {
   const router = useRouter();
@@ -102,9 +103,26 @@ function CartScreen() {
                         Taille : <span className="font-medium text-[#2D2416]">{item.size}</span>
                       </p>
 
-                      <p className="mt-4 text-lg font-medium text-[#2D2416]">
-                        {item.price} <span className="text-base">DT</span>
-                      </p>
+                      {/* PRIX */}
+                      <div className="mt-4">
+                        {hasDiscount(item.discount) ? (
+                          <div className="flex flex-col gap-1">
+                            <span className="inline-flex items-center gap-2">
+                              <span className="bg-red-500 text-white text-xs px-2 py-0.5 rounded-full font-bold">-{item.discount}%</span>
+                            </span>
+                            <p className="text-sm text-[#6B5635] line-through">
+                              {item.price} <span className="text-xs">DT</span>
+                            </p>
+                            <p className="text-lg font-bold text-red-600">
+                              {calculateFinalPrice(item.price, item.discount)} <span className="text-base">DT</span>
+                            </p>
+                          </div>
+                        ) : (
+                          <p className="text-lg font-medium text-[#2D2416]">
+                            {item.price} <span className="text-base">DT</span>
+                          </p>
+                        )}
+                      </div>
                     </div>
 
                     {/* ACTIONS */}
@@ -155,9 +173,9 @@ function CartScreen() {
                 <span>Total</span>
                 <span>
                   {cartItems.reduce(
-                    (a, c) => a + c.quantity * c.price,
+                    (a, c) => a + c.quantity * calculateFinalPrice(c.price, c.discount),
                     0
-                  )} <span className="text-base">DT</span>
+                  ).toFixed(2)} <span className="text-base">DT</span>
                 </span>
               </div>
 

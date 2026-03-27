@@ -13,6 +13,7 @@ export default function ProductCreateScreen() {
     const [name, setName] = useState('');
     const [category, setCategory] = useState('');
     const [price, setPrice] = useState('');
+    const [discount, setDiscount] = useState('');
     const [description, setDescription] = useState('');
 
     /* ---------- COULEURS / TAILLES ---------- */
@@ -90,6 +91,7 @@ export default function ProductCreateScreen() {
                 category,
                 brand: 'aysha_accessoires', // Marque définie automatiquement
                 price,
+                discount: discount || 0,
                 description,
                 colors,
             });
@@ -138,6 +140,18 @@ export default function ProductCreateScreen() {
                             placeholder="Prix (DT) *"
                             value={price}
                             onChange={(e) => setPrice(e.target.value)}
+                        />
+                        <input
+                            className="input"
+                            type="number"
+                            min="0"
+                            max="100"
+                            placeholder="Réduction en % (Ex: 20 pour -20%) - Optionnel"
+                            value={discount}
+                            onChange={(e) => {
+                                const val = e.target.value === '' ? '' : Math.min(100, Math.max(0, e.target.value));
+                                setDiscount(val);
+                            }}
                         />
                     </div>
 

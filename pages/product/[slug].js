@@ -26,12 +26,12 @@ export default function ProductScreen({ product }) {
     : product.price;
 
   /* ---------- VARIANTS ---------- */
-  const colors = product?.colors || [];
+  const colors = useMemo(() => product?.colors || [], [product]);
   const [selectedColorIndex, setSelectedColorIndex] = useState(0);
   const [selectedSize, setSelectedSize] = useState(null);
 
   const selectedColor = colors[selectedColorIndex];
-  const sizes = selectedColor?.sizes || [];
+  const sizes = useMemo(() => selectedColor?.sizes || [], [selectedColor]);
 
   // Masquer la section taille si elle est unique
   const hasUniqueSizeOnly = sizes.length === 1 && sizes[0].name.toLowerCase() === 'unique';

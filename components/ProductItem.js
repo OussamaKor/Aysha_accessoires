@@ -11,17 +11,39 @@ export default function ProductItem({ product, addToCartHandler }) {
     ? (product.price * (1 - discount / 100)).toFixed(2)
     : product.price;
 
+  // Calculer le stock total
+  const getTotalStock = () => {
+    if (!product.colors || product.colors.length === 0) return 0;
+    return product.colors.reduce((total, color) => {
+      return total + color.sizes.reduce((sum, size) => sum + size.countInStock, 0);
+    }, 0);
+  };
+
+  const totalStock = getTotalStock();
+  const isOutOfStock = totalStock === 0;
+
   return (
     <div className="group relative rounded-xl overflow-hidden bg-gradient-to-br from-white to-[#F5EFE7] shadow-md hover:shadow-2xl hover:shadow-[#9D8B6F]/30 transition-all duration-500">
       
       {/* Badge de réduction */}
-      {hasDiscount && (
+      {hasDiscount && !isOutOfStock && (
         <div className="absolute top-3 left-3 z-10">
           <div className="bg-gradient-to-r from-red-600 to-red-500 text-white 
                         px-3 py-1.5 rounded-full text-xs font-bold 
-                        shadow-lg transform -rotate-3 
+                        shadow-lg 
                         animate-pulse">
             -{discount}%
+          </div>
+        </div>
+      )}
+
+      {/* Badge Épuisé */}
+      {isOutOfStock && (
+        <div className="absolute top-3 left-3 z-10">
+          <div className="bg-gradient-to-r from-gray-800 to-gray-700 text-white 
+                        px-3 py-1.5 rounded-full text-xs font-bold 
+                        shadow-lg uppercase">
+            Épuisé
           </div>
         </div>
       )}
@@ -38,7 +60,7 @@ export default function ProductItem({ product, addToCartHandler }) {
           <img
             src={product.image}
             alt={product.name}
-            className="h-44 sm:h-52 w-full object-cover transition duration-700 group-hover:scale-110 group-hover:brightness-95"
+            className={`h-44 sm:h-52 w-full object-cover transition duration-700 group-hover:scale-110 group-hover:brightness-95 ${isOutOfStock ? 'opacity-60 grayscale' : ''}`}
           />
         </Link>
 
@@ -53,12 +75,14 @@ export default function ProductItem({ product, addToCartHandler }) {
           >
             <EyeIcon className="h-4 w-4 text-[#3D3021]" />
           </Link>
-          <button
-            onClick={() => addToCartHandler(product)}
-            className="rounded-full bg-[#6B5635]/95 backdrop-blur-sm p-2.5 shadow-lg hover:bg-[#5A4D3A] hover:scale-110 transition-all duration-300"
-          >
-            <ShoppingCartIcon className="h-4 w-4 text-white" />
-          </button>
+          {!isOutOfStock && (
+            <button
+              onClick={() => addToCartHandler(product)}
+              className="rounded-full bg-[#6B5635]/95 backdrop-blur-sm p-2.5 shadow-lg hover:bg-[#5A4D3A] hover:scale-110 transition-all duration-300"
+            >
+              <ShoppingCartIcon className="h-4 w-4 text-white" />
+            </button>
+          )}
         </div>
       </div>
 

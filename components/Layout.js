@@ -45,7 +45,7 @@ export default function Layout({ title, children, availableCategories = [] }) {
       <Head>
         <title>{title ? title + ' - Aysha Accessoires' : 'Aysha Accessoires'}</title>
         <meta name="description" content="Bijouterie Fine & Accessoires de Luxe" />
-        <link rel="icon" href="/favicon.ico" />
+        <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
       </Head>
 
       <ToastContainer position="bottom-center" limit={1} />

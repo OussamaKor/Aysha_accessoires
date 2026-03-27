@@ -82,7 +82,7 @@ export default function ShippingScreen() {
                            placeholder:text-[#9D8B6F]/50
                            focus:border-[#9D8B6F]/70 focus:outline-none focus:ring-1 focus:ring-[#9D8B6F]/40
                            transition-all duration-300"
-                placeholder="Jean Dupont"
+                placeholder=""
                 {...register('fullName', {
                   required: 'Veuillez entrer votre nom et prénom',
                 })}
@@ -105,7 +105,7 @@ export default function ShippingScreen() {
                            placeholder:text-[#9D8B6F]/50
                            focus:border-[#9D8B6F]/70 focus:ring-1 focus:ring-[#9D8B6F]/40
                            transition-all duration-300 resize-none"
-                placeholder="12 Rue de la Paix&#10;75002 Paris"
+                placeholder=""
                 {...register('address', {
                   required: 'Veuillez entrer votre adresse',
                   minLength: {
@@ -132,7 +132,7 @@ export default function ShippingScreen() {
                            placeholder:text-[#9D8B6F]/50
                            focus:border-[#9D8B6F]/70 focus:ring-1 focus:ring-[#9D8B6F]/40
                            transition-all duration-300"
-                placeholder="+33 6 12 34 56 78"
+                placeholder=""
                 {...register('phone', {
                   required: 'Veuillez entrer votre numéro',
                   pattern: {

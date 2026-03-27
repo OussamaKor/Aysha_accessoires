@@ -129,7 +129,7 @@ export default function AdminOrderScreen() {
                           </div>
                           <div>
                             <span className="font-medium text-gray-700">Total:</span>{' '}
-                            <span className="font-semibold">{order.totalPrice} DT</span>
+                            <span className="font-semibold">{order.itemsPrice + 7} DT</span>
                           </div>
                         </div>
 

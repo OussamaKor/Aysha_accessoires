@@ -13,13 +13,17 @@ import { FaInstagram } from 'react-icons/fa';
 import { ShoppingBagIcon } from '@heroicons/react/24/outline';
 import categories from '../utils/categories';
 
-export default function Layout({ title, children }) {
+export default function Layout({ title, children, availableCategories = [] }) {
   const { status, data: session } = useSession();
 
   const { state, dispatch } = useContext(Store);
   const { cart } = state;
   const [cartItemsCount, setCartItemsCount] = useState(0);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+
+  // Filtrer les catégories qui ont au moins un produit
+  const bijouxCategories = ['boucles-oreilles', 'colliers', 'bracelets', 'bagues', 'chokers', 'gourmettes', 'parures', 'bracelets-cheville'].filter(key => availableCategories.includes(key));
+  const accessoiresCategories = ['sacs', 'foulards', 'portefeuilles', 'lunettes'].filter(key => availableCategories.includes(key));
   
   useEffect(() => {
     setCartItemsCount(cart.cartItems.reduce((a, c) => a + c.quantity, 0));
@@ -47,7 +51,7 @@ export default function Layout({ title, children }) {
       <ToastContainer position="bottom-center" limit={1} />
 
       <div className="flex min-h-screen flex-col justify-between">
-        <header>
+        <header className="relative z-50">
           <nav className="flex h-20 items-center justify-between px-6 shadow-lg bg-gradient-to-b from-[#F5EFE7] to-white border-b border-[#C9B99A]/40 backdrop-blur-sm">
 
             {/* LOGO */}
@@ -63,58 +67,62 @@ export default function Layout({ title, children }) {
             {/* CATEGORIES */}
             <div className="hidden lg:flex items-center gap-6">
               {/* Menu Bijoux */}
-              <Menu as="div" className="relative">
-                <Menu.Button className="text-xs uppercase tracking-[0.15em] text-[#5A4D3A] font-normal hover:text-[#3D3021] transition-colors duration-300 flex items-center gap-1">
-                  Bijoux
-                  <svg className="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
-                  </svg>
-                </Menu.Button>
-                <Menu.Items className="absolute left-0 mt-3 w-56 origin-top-left bg-white shadow-xl rounded-xl border border-[#C9B99A]/40 py-2 focus:outline-none z-50">
-                  {['boucles-oreilles', 'colliers', 'bracelets', 'bagues', 'chokers', 'gourmettes', 'parures', 'bracelets-cheville'].map((key) => {
-                    const cat = categories.find(c => c.key === key);
-                    return cat ? (
-                      <Menu.Item key={cat.key}>
-                        {({ active }) => (
-                          <Link
-                            href={`/#${cat.key}`}
-                            className={`block px-4 py-2.5 text-sm text-[#2D2416] hover:bg-[#F5EFE7] transition-colors duration-200 ${active ? 'bg-[#F5EFE7]' : ''}`}
-                          >
-                            {cat.label}
-                          </Link>
-                        )}
-                      </Menu.Item>
-                    ) : null;
-                  })}
-                </Menu.Items>
-              </Menu>
+              {bijouxCategories.length > 0 && (
+                <Menu as="div" className="relative">
+                  <Menu.Button className="text-xs uppercase tracking-[0.15em] text-[#5A4D3A] font-normal hover:text-[#3D3021] transition-colors duration-300 flex items-center gap-1">
+                    Bijoux
+                    <svg className="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+                    </svg>
+                  </Menu.Button>
+                  <Menu.Items className="absolute left-0 mt-3 w-56 origin-top-left bg-white shadow-xl rounded-xl border border-[#C9B99A]/40 py-2 focus:outline-none z-[100]">
+                    {bijouxCategories.map((key) => {
+                      const cat = categories.find(c => c.key === key);
+                      return cat ? (
+                        <Menu.Item key={cat.key}>
+                          {({ active }) => (
+                            <Link
+                              href={`/#${cat.key}`}
+                              className={`block px-4 py-2.5 text-sm text-[#2D2416] hover:bg-[#F5EFE7] transition-colors duration-200 ${active ? 'bg-[#F5EFE7]' : ''}`}
+                            >
+                              {cat.label}
+                            </Link>
+                          )}
+                        </Menu.Item>
+                      ) : null;
+                    })}
+                  </Menu.Items>
+                </Menu>
+              )}
 
               {/* Menu Accessoires */}
-              <Menu as="div" className="relative">
-                <Menu.Button className="text-xs uppercase tracking-[0.15em] text-[#5A4D3A] font-normal hover:text-[#3D3021] transition-colors duration-300 flex items-center gap-1">
-                  Accessoires
-                  <svg className="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
-                  </svg>
-                </Menu.Button>
-                <Menu.Items className="absolute left-0 mt-3 w-56 origin-top-left bg-white shadow-xl rounded-xl border border-[#C9B99A]/40 py-2 focus:outline-none z-50">
-                  {['sacs', 'foulards', 'portefeuilles', 'lunettes'].map((key) => {
-                    const cat = categories.find(c => c.key === key);
-                    return cat ? (
-                      <Menu.Item key={cat.key}>
-                        {({ active }) => (
-                          <Link
-                            href={`/#${cat.key}`}
-                            className={`block px-4 py-2.5 text-sm text-[#2D2416] hover:bg-[#F5EFE7] transition-colors duration-200 ${active ? 'bg-[#F5EFE7]' : ''}`}
-                          >
-                            {cat.label}
-                          </Link>
-                        )}
-                      </Menu.Item>
-                    ) : null;
-                  })}
-                </Menu.Items>
-              </Menu>
+              {accessoiresCategories.length > 0 && (
+                <Menu as="div" className="relative">
+                  <Menu.Button className="text-xs uppercase tracking-[0.15em] text-[#5A4D3A] font-normal hover:text-[#3D3021] transition-colors duration-300 flex items-center gap-1">
+                    Accessoires
+                    <svg className="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+                    </svg>
+                  </Menu.Button>
+                  <Menu.Items className="absolute left-0 mt-3 w-56 origin-top-left bg-white shadow-xl rounded-xl border border-[#C9B99A]/40 py-2 focus:outline-none z-[100]">
+                    {accessoiresCategories.map((key) => {
+                      const cat = categories.find(c => c.key === key);
+                      return cat ? (
+                        <Menu.Item key={cat.key}>
+                          {({ active }) => (
+                            <Link
+                              href={`/#${cat.key}`}
+                              className={`block px-4 py-2.5 text-sm text-[#2D2416] hover:bg-[#F5EFE7] transition-colors duration-200 ${active ? 'bg-[#F5EFE7]' : ''}`}
+                            >
+                              {cat.label}
+                            </Link>
+                          )}
+                        </Menu.Item>
+                      ) : null;
+                    })}
+                  </Menu.Items>
+                </Menu>
+              )}
             </div>
 
             {/* RIGHT */}
@@ -214,44 +222,48 @@ export default function Layout({ title, children }) {
               {/* Contenu scrollable */}
               <div className="overflow-y-auto h-[calc(100%-80px)] p-6">
                 {/* Bijoux */}
-                <div className="mb-6">
-                  <h3 className="text-xs uppercase tracking-[0.2em] text-[#5A4D3A] font-medium mb-3 px-2">Bijoux</h3>
-                  <div className="space-y-1">
-                    {['boucles-oreilles', 'colliers', 'bracelets', 'bagues', 'chokers', 'gourmettes', 'parures', 'bracelets-cheville'].map((key) => {
-                      const cat = categories.find(c => c.key === key);
-                      return cat ? (
-                        <Link
-                          key={cat.key}
-                          href={`/#${cat.key}`}
-                          onClick={() => setMobileMenuOpen(false)}
-                          className="block px-4 py-3 text-sm text-[#2D2416] hover:bg-[#F5EFE7] rounded-lg transition-colors duration-200"
-                        >
-                          {cat.label}
-                        </Link>
-                      ) : null;
-                    })}
+                {bijouxCategories.length > 0 && (
+                  <div className="mb-6">
+                    <h3 className="text-xs uppercase tracking-[0.2em] text-[#5A4D3A] font-medium mb-3 px-2">Bijoux</h3>
+                    <div className="space-y-1">
+                      {bijouxCategories.map((key) => {
+                        const cat = categories.find(c => c.key === key);
+                        return cat ? (
+                          <Link
+                            key={cat.key}
+                            href={`/#${cat.key}`}
+                            onClick={() => setMobileMenuOpen(false)}
+                            className="block px-4 py-3 text-sm text-[#2D2416] hover:bg-[#F5EFE7] rounded-lg transition-colors duration-200"
+                          >
+                            {cat.label}
+                          </Link>
+                        ) : null;
+                      })}
+                    </div>
                   </div>
-                </div>
+                )}
 
                 {/* Accessoires */}
-                <div>
-                  <h3 className="text-xs uppercase tracking-[0.2em] text-[#5A4D3A] font-medium mb-3 px-2">Accessoires</h3>
-                  <div className="space-y-1">
-                    {['sacs', 'foulards', 'portefeuilles', 'lunettes'].map((key) => {
-                      const cat = categories.find(c => c.key === key);
-                      return cat ? (
-                        <Link
-                          key={cat.key}
-                          href={`/#${cat.key}`}
-                          onClick={() => setMobileMenuOpen(false)}
-                          className="block px-4 py-3 text-sm text-[#2D2416] hover:bg-[#F5EFE7] rounded-lg transition-colors duration-200"
-                        >
-                          {cat.label}
-                        </Link>
-                      ) : null;
-                    })}
+                {accessoiresCategories.length > 0 && (
+                  <div>
+                    <h3 className="text-xs uppercase tracking-[0.2em] text-[#5A4D3A] font-medium mb-3 px-2">Accessoires</h3>
+                    <div className="space-y-1">
+                      {accessoiresCategories.map((key) => {
+                        const cat = categories.find(c => c.key === key);
+                        return cat ? (
+                          <Link
+                            key={cat.key}
+                            href={`/#${cat.key}`}
+                            onClick={() => setMobileMenuOpen(false)}
+                            className="block px-4 py-3 text-sm text-[#2D2416] hover:bg-[#F5EFE7] rounded-lg transition-colors duration-200"
+                          >
+                            {cat.label}
+                          </Link>
+                        ) : null;
+                      })}
+                    </div>
                   </div>
-                </div>
+                )}
               </div>
             </div>
           </div>

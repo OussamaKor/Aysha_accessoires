@@ -284,10 +284,19 @@ function OrderScreen() {
                   </h2>
                   
                   <div className="w-12 h-[2px] mx-auto mb-6 bg-gradient-to-r from-transparent via-[#9D8B6F] to-transparent"></div>
-
+                  <div className="space-y-3 text-sm mb-6">
+                    <div className="flex justify-between text-[#5A4D3A] font-normal">
+                      <span>Sous-total</span>
+                      <span className="text-[#2D2416] font-medium">{itemsPrice} DT</span>
+                    </div>
+                    <div className="flex justify-between text-[#5A4D3A] font-normal">
+                      <span>Livraison</span>
+                      <span className="text-[#2D2416] font-medium">7 DT</span>
+                    </div>
+                  </div>
                   <div className="flex justify-between text-xl font-medium mb-6 text-[#2D2416]">
                     <span>Total</span>
-                    <span>{itemsPrice} <span className="text-base">DT</span></span>
+                    <span>{itemsPrice + 7} <span className="text-base">DT</span></span>
                   </div>
 
                   {session?.user?.isAdmin &&

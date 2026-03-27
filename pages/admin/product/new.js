@@ -88,7 +88,7 @@ export default function ProductCreateScreen() {
                 name,
                 slug,
                 category,
-                brand: 'Ma&ya', // Marque définie automatiquement
+                brand: 'aysha_accessoires', // Marque définie automatiquement
                 price,
                 description,
                 colors,

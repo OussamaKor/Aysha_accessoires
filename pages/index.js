@@ -55,6 +55,11 @@ export default function Home({ products }) {
     }, {});
   }, [products]);
 
+  /* ---------- AVAILABLE CATEGORIES ---------- */
+  const availableCategories = useMemo(() => {
+    return Object.keys(productsByCategory);
+  }, [productsByCategory]);
+
   /* ---------- CART ---------- */
   const addToCartHandler = async (product) => {
     const existItem = cart.cartItems.find((x) => x.slug === product.slug);
@@ -70,7 +75,7 @@ export default function Home({ products }) {
   };
 
   return (
-    <Layout title="Home Page">
+    <Layout title="Home Page" availableCategories={availableCategories}>
       <div className="min-h-screen w-full bg-gradient-to-b from-[#FAF7F2] via-[#F5EFE7] to-[#EFE6D8]">
 
         {/* ---------- HERO / CAROUSEL ---------- */}
@@ -215,7 +220,7 @@ export default function Home({ products }) {
                         msOverflowStyle: 'none',
                       }}
                     >
-                      {categoryProducts.map((product) => (
+                      {categoryProducts.slice(0, 4).map((product) => (
                         <div 
                           key={product.slug}
                           className="flex-none w-[45vw] sm:w-[38vw] md:w-[28vw] lg:w-[20vw] snap-start"
@@ -226,6 +231,44 @@ export default function Home({ products }) {
                           />
                         </div>
                       ))}
+                      
+                      {/* Bouton "Voir tout" si plus de 4 produits */}
+                      {categoryProducts.length > 4 && (
+                        <div className="flex-none w-[45vw] sm:w-[38vw] md:w-[28vw] lg:w-[20vw] snap-start">
+                          <a
+                            href={`/category/${category}`}
+                            className="block h-full min-h-[280px] sm:min-h-[320px]
+                                     bg-gradient-to-br from-white/80 to-[#F5EFE7]/60
+                                     backdrop-blur-sm
+                                     rounded-2xl shadow-md hover:shadow-xl
+                                     border border-[#D4C5B0]/30
+                                     transition-all duration-300
+                                     hover:scale-105 hover:border-[#9D8B6F]
+                                     flex flex-col items-center justify-center
+                                     group p-6 text-center"
+                          >
+                            <div className="w-16 h-16 mb-4 rounded-full bg-gradient-to-br from-[#9D8B6F] to-[#6B5635]
+                                          flex items-center justify-center
+                                          group-hover:scale-110 transition-transform duration-300
+                                          shadow-lg">
+                              <svg 
+                                className="w-8 h-8 text-white" 
+                                fill="none" 
+                                stroke="currentColor" 
+                                strokeWidth="2"
+                                viewBox="0 0 24 24">
+                                <path strokeLinecap="round" strokeLinejoin="round" d="M17 8l4 4m0 0l-4 4m4-4H3" />
+                              </svg>
+                            </div>
+                            <div className="text-sm sm:text-base font-medium text-[#3D3021] uppercase tracking-[0.15em] mb-2">
+                              Voir tout
+                            </div>
+                            <div className="text-xs text-[#6B5635] tracking-wide">
+                              {categoryProducts.length} produits
+                            </div>
+                          </a>
+                        </div>
+                      )}
                     </div>
                     
                     {/* Gradient fade sur les bords */}
